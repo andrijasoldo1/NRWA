@@ -1,0 +1,43 @@
+{
+    "private": true,
+    "type": "module",
+    "scripts": {
+        "dev": "vite",
+        "build": "vite build"
+    },
+    "devDependencies": {
+        "@popperjs/core": "^2.11.6",
+        "axios": "^1.6.4",
+        "bootstrap": "^5.2.3",
+        "laravel-vite-plugin": "^1.0.0",
+        "sass": "^1.56.1",
+        "vite": "^5.0.0"
+    },
+    "name": "laravel8crud",
+    "description": "<p align=\"center\"><a href=\"https://laravel.com\" target=\"_blank\"><img src=\"https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg\" width=\"400\" alt=\"Laravel Logo\"></a></p>",
+    "version": "1.0.0",
+    "main": "vite.config.js",
+    "directories": {
+        "test": "tests"
+    },
+    "dependencies": {
+        "asynckit": "^0.4.0",
+        "combined-stream": "^1.0.8",
+        "form-data": "^4.0.0",
+        "delayed-stream": "^1.0.0",
+        "mime-types": "^2.1.35",
+        "follow-redirects": "^1.15.6",
+        "mime-db": "^1.52.0",
+        "postcss": "^8.4.36",
+        "nanoid": "^3.3.7",
+        "picocolors": "^1.0.0",
+        "esbuild": "^0.19.12",
+        "picomatch": "^2.3.1",
+        "proxy-from-env": "^1.1.0",
+        "vite-plugin-full-reload": "^1.1.0",
+        "rollup": "^4.13.0",
+        "source-map-js": "^1.1.0"
+    },
+    "author": "",
+    "license": "ISC"
+}
