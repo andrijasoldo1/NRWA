@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Aplikacija</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="container mt-4">
+        <h2>CRUD Aplikacija za tablicu 'individuals'</h2>
+
+        <!-- Unos novog individuala -->
+        <div id="create-form" class="mb-4">
+            <h4>Dodaj novog individuala</h4>
+            <form id="create-individual-form">
+                <div class="mb-3">
+                    <label for="name" class="form-label">Ime</label>
+                    <input type="text" class="form-control" id="name" placeholder="Unesite ime" required>
+                </div>
+                <div class="mb-3">
+                    <label for="ssn" class="form-label">SSN</label>
+                    <input type="text" class="form-control" id="ssn" placeholder="Unesite SSN" required>
+                </div>
+                <div class="mb-3">
+                    <label for="owner_id" class="form-label">Owner ID</label>
+                    <input type="number" class="form-control" id="owner_id" placeholder="Unesite Owner ID" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="create-btn">Dodaj</button>
+            </form>
+        </div>
+
+        <!-- Prikaz individuala -->
+        <div id="individuals-list" class="mb-4">
+            <h4>Lista individuala</h4>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Ime</th>
+                        <th>SSN</th>
+                        <th>Owner ID</th>
+                        <th>Akcije</th>
+                    </tr>
+                </thead>
+                <tbody id="individuals-tbody">
+                    <!-- Podaci će biti umetnuti ovdje -->
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Ažuriranje individuala -->
+        <div id="update-form" class="mb-4">
+            <h4>Ažurirajte individuala</h4>
+            <form id="update-individual-form">
+                <div class="mb-3">
+                    <label for="update-id" class="form-label">ID</label>
+                    <input type="number" class="form-control" id="update-id" placeholder="Unesite ID individuala za ažuriranje" required>
+                </div>
+                <div class="mb-3">
+                    <label for="update-name" class="form-label">Ime</label>
+                    <input type="text" class="form-control" id="update-name" placeholder="Ažurirajte ime" required>
+                </div>
+                <div class="mb-3">
+                    <label for="update-ssn" class="form-label">SSN</label>
+                    <input type="text" class="form-control" id="update-ssn" placeholder="Ažurirajte SSN" required>
+                </div>
+                <div class="mb-3">
+                    <label for="update-owner_id" class="form-label">Owner ID</label>
+                    <input type="number" class="form-control" id="update-owner_id" placeholder="Ažurirajte Owner ID" required>
+                </div>
+                <button type="submit" class="btn btn-primary" id="update-btn">Ažuriraj</button>
+            </form>
+        </div>
+
+        <!-- Brisanje individuala -->
+        <div id="delete-form" class="mb-4">
+            <h4>Obrišite individuala</h4>
+            <form id="delete-individual-form">
+                <div class="mb-3">
+                    <label for="delete-id" class="form-label">ID</label>
+                    <input type="number" class="form-control" id="delete-id" placeholder="Unesite ID individuala za brisanje" required>
+                </div>
+                <button type="submit" class="btn btn-danger" id="delete-btn">Obriši</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="script.js"></script>
+</body>
+
+</html>
