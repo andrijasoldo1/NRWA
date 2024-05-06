@@ -1,0 +1,761 @@
+name: Endpoints
+description: ''
+endpoints:
+  -
+    httpMethods:
+      - GET
+    uri: api/documentation
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display Swagger API page.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: "<!DOCTYPE html>\r\n<html lang=\"en\">\r\n<head>\r\n    <meta charset=\"UTF-8\">\r\n    <title>L5 Swagger UI</title>\r\n    <link rel=\"stylesheet\" type=\"text/css\" href=\"http://localhost/docs/asset/swagger-ui.css?v=46937e45e4e342ab1be319bfa1351777\">\r\n    <link rel=\"icon\" type=\"image/png\" href=\"http://localhost/docs/asset/favicon-32x32.png?v=40d4f2c38d1cd854ad463f16373cbcb6\" sizes=\"32x32\"/>\r\n    <link rel=\"icon\" type=\"image/png\" href=\"http://localhost/docs/asset/favicon-16x16.png?v=f0ae831196d55d8f4115b6c5e8ec5384\" sizes=\"16x16\"/>\r\n    <style>\r\n    html\r\n    {\r\n        box-sizing: border-box;\r\n        overflow: -moz-scrollbars-vertical;\r\n        overflow-y: scroll;\r\n    }\r\n    *,\r\n    *:before,\r\n    *:after\r\n    {\r\n        box-sizing: inherit;\r\n    }\r\n\r\n    body {\r\n      margin:0;\r\n      background: #fafafa;\r\n    }\r\n    </style>\r\n</head>\r\n\r\n<body>\r\n<div id=\"swagger-ui\"></div>\r\n\r\n<script src=\"http://localhost/docs/asset/swagger-ui-bundle.js?v=16c92ba77a485613c92eb82454d7fbee\"></script>\r\n<script src=\"http://localhost/docs/asset/swagger-ui-standalone-preset.js?v=3060b7fa799527d9775c5100c725fea1\"></script>\r\n<script>\r\n    window.onload = function() {\r\n        // Build a system\r\n        const ui = SwaggerUIBundle({\r\n            dom_id: '#swagger-ui',\r\n            url: \"http://localhost/docs/api-docs.json\",\r\n            operationsSorter: null,\r\n            configUrl: null,\r\n            validatorUrl: null,\r\n            oauth2RedirectUrl: \"http://localhost/api/oauth2-callback\",\r\n\r\n            requestInterceptor: function(request) {\r\n                request.headers['X-CSRF-TOKEN'] = '';\r\n                return request;\r\n            },\r\n\r\n            presets: [\r\n                SwaggerUIBundle.presets.apis,\r\n                SwaggerUIStandalonePreset\r\n            ],\r\n\r\n            plugins: [\r\n                SwaggerUIBundle.plugins.DownloadUrl\r\n            ],\r\n\r\n            layout: \"StandaloneLayout\",\r\n            docExpansion : \"none\",\r\n            deepLinking: true,\r\n            filter: true,\r\n            persistAuthorization: \"false\",\r\n\r\n        })\r\n\r\n        window.ui = ui\r\n\r\n            }\r\n</script>\r\n</body>\r\n</html>\r\n"
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/oauth2-callback
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Display Oauth2 callback pages.'
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: "<!doctype html>\r\n<html lang=\"en-US\">\r\n<head>\r\n    <title>Swagger UI: OAuth2 Redirect</title>\r\n</head>\r\n<body>\r\n<script>\r\n    'use strict';\r\n    function run () {\r\n        var oauth2 = window.opener.swaggerUIRedirectOauth2;\r\n        var sentState = oauth2.state;\r\n        var redirectUrl = oauth2.redirectUrl;\r\n        var isValid, qp, arr;\r\n\r\n        if (/code|token|error/.test(window.location.hash)) {\r\n            qp = window.location.hash.substring(1).replace('?', '&');\r\n        } else {\r\n            qp = location.search.substring(1);\r\n        }\r\n\r\n        arr = qp.split(\"&\");\r\n        arr.forEach(function (v,i,_arr) { _arr[i] = '\"' + v.replace('=', '\":\"') + '\"';});\r\n        qp = qp ? JSON.parse('{' + arr.join() + '}',\r\n                function (key, value) {\r\n                    return key === \"\" ? value : decodeURIComponent(value);\r\n                }\r\n        ) : {};\r\n\r\n        isValid = qp.state === sentState;\r\n\r\n        if ((\r\n          oauth2.auth.schema.get(\"flow\") === \"accessCode\" ||\r\n          oauth2.auth.schema.get(\"flow\") === \"authorizationCode\" ||\r\n          oauth2.auth.schema.get(\"flow\") === \"authorization_code\"\r\n        ) && !oauth2.auth.code) {\r\n            if (!isValid) {\r\n                oauth2.errCb({\r\n                    authId: oauth2.auth.name,\r\n                    source: \"auth\",\r\n                    level: \"warning\",\r\n                    message: \"Authorization may be unsafe, passed state was changed in server. The passed state wasn't returned from auth server.\"\r\n                });\r\n            }\r\n\r\n            if (qp.code) {\r\n                delete oauth2.state;\r\n                oauth2.auth.code = qp.code;\r\n                oauth2.callback({auth: oauth2.auth, redirectUrl: redirectUrl});\r\n            } else {\r\n                let oauthErrorMsg;\r\n                if (qp.error) {\r\n                    oauthErrorMsg = \"[\"+qp.error+\"]: \" +\r\n                        (qp.error_description ? qp.error_description+ \". \" : \"no accessCode received from the server. \") +\r\n                        (qp.error_uri ? \"More info: \"+qp.error_uri : \"\");\r\n                }\r\n\r\n                oauth2.errCb({\r\n                    authId: oauth2.auth.name,\r\n                    source: \"auth\",\r\n                    level: \"error\",\r\n                    message: oauthErrorMsg || \"[Authorization failed]: no accessCode received from the server.\"\r\n                });\r\n            }\r\n        } else {\r\n            oauth2.callback({auth: oauth2.auth, token: qp, isValid: isValid, redirectUrl: redirectUrl});\r\n        }\r\n        window.close();\r\n    }\r\n\r\n    if (document.readyState !== 'loading') {\r\n        run();\r\n    } else {\r\n        document.addEventListener('DOMContentLoaded', function () {\r\n            run();\r\n        });\r\n    }\r\n</script>\r\n</body>\r\n</html>\r\n"
+        headers:
+          content-type: 'text/html; charset=UTF-8'
+          cache-control: 'no-cache, private'
+          access-control-allow-origin: '*'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/banks
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '[{"id":1,"bname":"Bank1","city":"City1","owner_id":3},{"id":3,"bname":"Bank3","city":"City3","owner_id":3}]'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6InRoK3lZVjZXWmFLRTRjbGdaUVFaOXc9PSIsInZhbHVlIjoiU0QvNWY1aHhkcVRyd0t0a3pCdnYrSVBzNCt2bEpHWnhpdFlmd3N5bGE4MU92L2ZNN0xyY2lVWWNCb0lpdHFQc29Zb1hCb1JqOUU3eWRzTnFjSlJVNlYzZTFvTyt4cmZZM0xnR3lsSWxhZWJ2RFVLeWlTb2lwTU10SGpaTXRmQ0YiLCJtYWMiOiI5NjFmMjc4YzUwZTNjODIzYmM0MmE4NjUzOTBhNzE3NDVmNDk3MDBlNDBlMWQ1MjA5MGY2YTA1MmE1OGU3OTk0IiwidGFnIjoiIn0%3D; expires=Mon, 22 Apr 2024 23:05:09 GMT; Max-Age=7200; path=/; samesite=lax; laravel_session=eyJpdiI6ImhtKzFQdUNBNThmNlB5ZzJabS9BbXc9PSIsInZhbHVlIjoiTXZhTVpWQ205QUJVcE9KTG9zTCtjNU13cmhyd1YwdzFFR2pMamJsd1FTZHNpVWx6ZXdpRjdpekNRejN6MFdNODBVc3p5cXAwY2VGdUcxS2FObWJJMEZJdHFaTHM4MHprZU1MZTA2WGZhS1dVSmJwQXAxd2lCcFRCRW1UT25od08iLCJtYWMiOiIxMzY4NjU0OWM1NDYzYzA0NDNiZDU0MjBjNTIwM2U1MDBmZTZmZDNiMjM0MDY0MzZiMzkyYzM3OTM1NjU2NjM3IiwidGFnIjoiIn0%3D; expires=Mon, 22 Apr 2024 23:05:09 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/banks
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      bname:
+        name: bname
+        description: 'Must not be greater than 20 characters.'
+        required: true
+        example: tvizeam
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      city:
+        name: city
+        description: 'Must not be greater than 20 characters.'
+        required: true
+        example: sfewmnpuux
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      owner_id:
+        name: owner_id
+        description: ''
+        required: true
+        example: quos
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanBodyParameters:
+      bname: tvizeam
+      city: sfewmnpuux
+      owner_id: quos
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/banks/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the bank.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"id":1,"bname":"Bank1","city":"City1","owner_id":3}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IlJibzZSR1FYSXlIRUlSOVRyWmtWQUE9PSIsInZhbHVlIjoiTTVobDVRSDV4b1lUTnUrL2F5T0o4b2d6WUd5RENrK2RzMU51S05XMVI3WmE5cmVYT2FWUTkwaG5kSUxyaVBCVVE5RUhOY3Y1TXdlamtCOTZROGpmWTlsQkhhcVRTelU2YWlJdkhmdW1GTjFJRjZZOUFuVnNGcXYwRU10b09mb1oiLCJtYWMiOiI0NGE0NzAwN2QxZWMzMGY3MzYxM2U3MzhkMmJkZmVhYWU4YWMxZGQyYTlkYmI2MTAzODBkZWEzMDRhNjVjMDIxIiwidGFnIjoiIn0%3D; expires=Mon, 22 Apr 2024 23:05:10 GMT; Max-Age=7200; path=/; samesite=lax; laravel_session=eyJpdiI6IjBGZkIzSytQdGtjb21FUnRLTVZyMEE9PSIsInZhbHVlIjoiR2tXZzdIcXNRZHlCdFJUa0MvQnp6TXhVSTFKaE53WTU4WlpFcUEwYTNxby9VK3ZTeGtDMWZhZ3ZzVFBkK1BQcCsvRzlISW5NcmVSWDdYTlNBN0tUclFrRXVTd0RBOW1oM1BkaEgxQWhnRUQ1ZHRmc2xuN0NWNERxOXE5TmpGdVkiLCJtYWMiOiIyMzRiMzk4ZGVlMmEyZjU0Yzc1NTJiNWQwODljM2RhNGUyMWZkNzJmNGMzYjcxZDBjMDAwZDkwNTYzOGFjN2ZiIiwidGFnIjoiIn0%3D; expires=Mon, 22 Apr 2024 23:05:10 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/banks/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the bank.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/banks/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the bank.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/individuals
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '[{"id":1,"ssn":123456789,"name":"Individual1","owner_id":4},{"id":3,"ssn":345678901,"name":"Individual3","owner_id":3}]'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6Imd2L3FSM0diN3J4UUh1b0xHOEh0VUE9PSIsInZhbHVlIjoiQzRBR0ZqRU5sRWJ2Q21GbjdCaUFMZHZTNEtGSHIwNi9YMkh2ZE1TL2FEQ0NvM2x4OHhWQ0NqMWxBaFlQbjZOTldzaDRLWEtFaDlqTVRwaXR4dlk5bFlPRHNkaUFVOGhGYi9wRzFxSCswd2ZYYVJWTVNEWUtkNVRsdFk2Znd4WHgiLCJtYWMiOiJiYzhlZWU4MmY3YzAyMDA4MTcyZDE2MWYwNWQ2ZDA2NDcyNTU5ZTdkNThlZTYxNDZjYjBjNGMxMTFiNTA2ZmY2IiwidGFnIjoiIn0%3D; expires=Mon, 22 Apr 2024 23:05:10 GMT; Max-Age=7200; path=/; samesite=lax; laravel_session=eyJpdiI6InNhczRoaFZNWnhGZFVGQlNGR3VxNHc9PSIsInZhbHVlIjoiVkl2MFJaUDY3V0xLeTdORUx4bFpVYXRZbVVxeG1WZjB1K2gyV2kyeHNSQ2tFZUNodWZoNnl3bUV6U2JFV05HSEs2R0Q0TjNSK3lucVZmMC94SnBLSllVZVJXUFRVcDl0QnhLMDdNWkxkeTZrUWdyMjZsRUt3ZUJXWERDTTg4b04iLCJtYWMiOiJhNjk4NGRlMTJmNTA3NDhkYzhkNWYwOWE3ZDY4MWMwY2MyZGFmNDNkZjU0YzNkOTQ1YmNkMzEyNzgxMmFkZWMyIiwidGFnIjoiIn0%3D; expires=Mon, 22 Apr 2024 23:05:10 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/individuals
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      ssn:
+        name: ssn
+        description: ''
+        required: true
+        example: 3333.623416821
+        type: number
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      name:
+        name: name
+        description: 'Must not be greater than 20 characters.'
+        required: true
+        example: eqyfneoduuvkdxy
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      owner_id:
+        name: owner_id
+        description: ''
+        required: true
+        example: odio
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanBodyParameters:
+      ssn: 3333.623416821
+      name: eqyfneoduuvkdxy
+      owner_id: odio
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/individuals/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the individual.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '{"id":1,"ssn":123456789,"name":"Individual1","owner_id":4}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IlIrZ1Avc1pNbmZWQjQrWG5lSTZFUUE9PSIsInZhbHVlIjoiYWdHVHlNNHhSNHJyTVNRL0JpbU9UUTg1SWluRWZJaVVrVUVmS3BML3BTWFphVVlEWmhnZ3NSN3dGbStvNS8wbk5JdnRiU3kwOUhHL1A5Z1lSUm9DT1BoWmdCWENVM2JJK1FIbThHNXBMUHVMWW5YaXg4WlQvVDI0a3hyRERnYVciLCJtYWMiOiI2ZDJmMzRkNTA5NDhlYzUwN2M1NzU2YzNiZjMyMTBiMWQyNzJhMDYzODBkM2Y4OTVlZjBmYTM5NDkxYzg0MjFjIiwidGFnIjoiIn0%3D; expires=Mon, 22 Apr 2024 23:05:10 GMT; Max-Age=7200; path=/; samesite=lax; laravel_session=eyJpdiI6Iko4cHF3QkozR1U1dkY0ZlVIVmRvalE9PSIsInZhbHVlIjoiZlZEZzZzb2N0R2FNaTVRL2FZQVU1cXJwNjQ0MWhBSUJLTkd5SUlYTm9GVWNMc29za1RDR1dISk45QTlnS1R3VnFFeWx2VFhyK3FHR29sWW9TaWo5b21DdEc2aDE4NnRJcnJ3TmplRFhpdzZhUHRqcTdFNFBGL1ZaWU53TEdiVUwiLCJtYWMiOiIzNjUxZGNkN2IyNWQ4YjIwZWVkZDEyNmVmMGVhMjdkNjY1YTg0Y2NiZDgwMGIxODg5OWU1MTUxZGM2NWYzMDc5IiwidGFnIjoiIn0%3D; expires=Mon, 22 Apr 2024 23:05:10 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/individuals/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the individual.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/individuals/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the individual.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: api/owns
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 200
+        content: '[{"id":1,"owner_id":1,"vehicle_id":1},{"id":3,"owner_id":3,"vehicle_id":3},{"id":4,"owner_id":6,"vehicle_id":4}]'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6IkNtS2ovOWY2ZlFabWxTWVFtNWZoZEE9PSIsInZhbHVlIjoiaHpDZ0ZKUEJ0SXZvdVFNMEd5ZG14NDk4NWJQanE5VFRGcDRaaHYyMXVnSzBjOHVmOHN2R0RTdzVrWjhLckdEVm5ER2M3RW1OT1JHZjAxcTdKQkkxN2F3L2h2YzdhVEQyYXA4cE0xSFpOLzBsQzBLNFNpUVFmMmRKaGtyMlZIeXYiLCJtYWMiOiI0NjU0NGNmN2MyZmIyNDMyZmI4MjdjNWFlNzdiYzZmOGQ5Yjg0ZDc1NzE5ODI0ZDFhZmYyOTJkYWQyN2NkYjg3IiwidGFnIjoiIn0%3D; expires=Mon, 22 Apr 2024 23:05:10 GMT; Max-Age=7200; path=/; samesite=lax; laravel_session=eyJpdiI6IlFCRERwN1B0bGdNSVdoVzFFc09aT3c9PSIsInZhbHVlIjoiNklMN2NPOWcreXB0bnl4c0tPTlpLZ25DMXJsalE3UytGbmh1RmxsQUs4V3daaGt5eXNuVk5NK0k4bG56eFV0YmdWUUg0TTJjRE9PdWFoZ2E4dkxudUxoemRrbkxtNGhQaloyUXFzWTB3NjhIZ3B5WWRUZHM2bDcvNzEwaG9HdDciLCJtYWMiOiJmN2VkZGJkMThiMTRkMjUxZjkzNjMyNWQ2MGQ3YzkyMDExOWQ5YjFkZmRiMTgxNTVmYTE4MTk4MmE4NGNhZjhiIiwidGFnIjoiIn0%3D; expires=Mon, 22 Apr 2024 23:05:10 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - POST
+    uri: api/owns
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      owner_id:
+        name: owner_id
+        description: ''
+        required: true
+        example: aliquid
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+      vehicle_id:
+        name: vehicle_id
+        description: ''
+        required: true
+        example: illo
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanBodyParameters:
+      owner_id: aliquid
+      vehicle_id: illo
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - GET
+    uri: 'api/owns/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the own.'
+        required: true
+        example: ratione
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: ratione
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        status: 404
+        content: '{"message":"Ownership not found"}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          access-control-allow-origin: '*'
+          set-cookie: 'XSRF-TOKEN=eyJpdiI6InNFemJSUWdqcTUzc0NRMmxBR1J3Nmc9PSIsInZhbHVlIjoiYVJLRkZ1MjN1V1FmRDY3VTNDbVVjQk1SbGlRYm1SRkY4Zmt6OGF6MDdoM0tXZi95VmRIbFVyb1FjZTQ0azM4NlBBdllaV3UzOXRKR3FySEVPWGJteG1QNFpZa2ZhZ21INGRhY1U4REhCekp3YytLbG14RG82WjIrQlYwakNvajYiLCJtYWMiOiIxNjU4NjQyODRmNzA1MmZjMGNiY2JlMDhkYjhmYWNkNGVmNjQ0ZTQwZmFiNDk5NGMwZmIxNmJmYjg1NGM3YzY3IiwidGFnIjoiIn0%3D; expires=Mon, 22 Apr 2024 23:05:10 GMT; Max-Age=7200; path=/; samesite=lax; laravel_session=eyJpdiI6IkdnN0wzb3NOWFYzc2JWdS9CS2pxT0E9PSIsInZhbHVlIjoiVURFNld5eVZuSU1VcVovL2o1eDRMdXBMYTkvL3EzcmNMR3g0MGJkZ3ZjWUtqbEptUnR4V1FwZFYyaExYanBuUWRKWjE4blRDNUZFVWU4NkJjSXdUczA0RkVKOWZ2K2FzaW9obll6VjhPeWNTazQwdUZNOEVrS2VuS2V3MjY1VDciLCJtYWMiOiIzODU3OGRmNDg4YzY3Yzg2NjUyMTgxZWI3MTRjNTI1Y2JmMTQyMTgyZjkwYzVlNzljMDBmNTNiMzYwZjI0OTFiIiwidGFnIjoiIn0%3D; expires=Mon, 22 Apr 2024 23:05:10 GMT; Max-Age=7200; path=/; httponly; samesite=lax'
+        description: null
+        custom: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - PUT
+    uri: 'api/owns/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the own.'
+        required: true
+        example: mollitia
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: mollitia
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []
+  -
+    httpMethods:
+      - DELETE
+    uri: 'api/owns/{id}'
+    metadata:
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      custom: []
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        name: id
+        description: 'The ID of the own.'
+        required: true
+        example: quisquam
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        custom: []
+    cleanUrlParameters:
+      id: quisquam
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+    custom: []

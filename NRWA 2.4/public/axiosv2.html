@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD Banke</title>
+
+    <!-- Uključite Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
+
+    <!-- Uključite Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <div class="container my-4">
+        <h1 class="mb-4">CRUD Banke</h1>
+
+        <!-- Polje za unos pretraživanja -->
+        <div class="mb-3">
+            <input type="text" id="search" class="form-control" placeholder="Upišite naziv banke ili grad..." oninput="searchBanks()">
+        </div>
+
+        <!-- Prikaz banki -->
+        <ul id="results" class="list-group mb-4"></ul>
+
+        <!-- Forma za dodavanje/uređivanje banke -->
+        <div>
+            <h2 id="formTitle">Dodajte novu banku</h2>
+            <form id="bankForm" onsubmit="submitForm(event)">
+                <div class="mb-3">
+                    <label for="bname" class="form-label">Naziv banke:</label>
+                    <input type="text" id="bname" name="bname" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="city" class="form-label">Grad:</label>
+                    <input type="text" id="city" name="city" class="form-control" required>
+                </div>
+                <div class="mb-3">
+                    <label for="owner_id" class="form-label">ID vlasnika:</label>
+                    <input type="number" id="owner_id" name="owner_id" class="form-control" required>
+                </div>
+                <input type="hidden" id="bankId" name="bankId">
+                <button type="submit" class="btn btn-primary">Spremi</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        let allBanks = []; // Pohranjuje sve banke
+
+        // Funkcija za dohvaćanje svih banaka i postavljanje početnog prikaza
+        function fetchAllBanks() {
+            axios.get('/api/banks')
+                .then(response => {
+                    allBanks = response.data;
+                    displayBanks(allBanks);
+                })
+                .catch(error => {
+                    console.error('Došlo je do greške prilikom dohvaćanja banaka:', error);
+                });
+        }
+
+        // Funkcija za prikaz banaka
+        function displayBanks(banks) {
+            const resultsList = document.getElementById('results');
+            resultsList.innerHTML = ''; // Ispraznite trenutne rezultate
+
+            banks.forEach(bank => {
+                const listItem = document.createElement('li');
+                listItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+                listItem.innerHTML = `
+                    <div>
+                        <strong>${bank.bname}</strong> (${bank.city})
+                    </div>
+                    <div>
+                        <button class="btn btn-sm btn-info me-2" onclick="editBank(${bank.id})">Uredi</button>
+                        <button class="btn btn-sm btn-danger" onclick="deleteBank(${bank.id})">Obriši</button>
+                    </div>
+                `;
+                resultsList.appendChild(listItem);
+            });
+        }
+
+        // Funkcija za pretraživanje banaka
+        function searchBanks() {
+            const query = document.getElementById('search').value.toLowerCase();
+
+            // Filtrirajte sve banke prema upitu pretraživanja
+            const filteredBanks = allBanks.filter(bank => {
+                return bank.bname.toLowerCase().includes(query) || bank.city.toLowerCase().includes(query);
+            });
+
+            // Prikaz filtriranih banaka
+            displayBanks(filteredBanks);
+        }
+
+        // Funkcija za slanje forme
+        function submitForm(event) {
+            event.preventDefault(); // Spriječi refresh stranice
+
+            const bankId = document.getElementById('bankId').value;
+            const bname = document.getElementById('bname').value;
+            const city = document.getElementById('city').value;
+            const ownerId = document.getElementById('owner_id').value;
+
+            const bankData = {
+                bname,
+                city,
+                owner_id: ownerId
+            };
+
+            if (bankId) {
+                // Ako postoji bankId, radi se o uređivanju postojeće banke
+                axios.put(`/api/banks/${bankId}`, bankData)
+                    .then(response => {
+                        fetchAllBanks(); // Osvježi popis banaka
+                        clearForm(); // Očisti formu
+                    })
+                    .catch(error => {
+                        console.error('Greška prilikom ažuriranja banke:', error);
+                    });
+            } else {
+                // Ako ne postoji bankId, radi se o stvaranju nove banke
+                axios.post('/api/banks', bankData)
+                    .then(response => {
+                        fetchAllBanks(); // Osvježi popis banaka
+                        clearForm(); // Očisti formu
+                    })
+                    .catch(error => {
+                        console.error('Greška prilikom stvaranja banke:', error);
+                    });
+            }
+        }
+
+        // Funkcija za uređivanje banke
+        function editBank(bankId) {
+            const bank = allBanks.find(bank => bank.id === bankId);
+
+            if (bank) {
+                // Popuni formu podacima o banci za uređivanje
+                document.getElementById('formTitle').textContent = `Uredi banku ${bank.bname}`;
+                document.getElementById('bname').value = bank.bname;
+                document.getElementById('city').value = bank.city;
+                document.getElementById('owner_id').value = bank.owner_id;
+                document.getElementById('bankId').value = bankId;
+            }
+        }
+
+        // Funkcija za brisanje banke
+        function deleteBank(bankId) {
+            axios.delete(`/api/banks/${bankId}`)
+                .then(response => {
+                    fetchAllBanks(); // Osvježi popis banaka
+                })
+                .catch(error => {
+                    console.error('Greška prilikom brisanja banke:', error);
+                });
+        }
+
+        // Funkcija za čišćenje forme
+        function clearForm() {
+            document.getElementById('formTitle').textContent = 'Dodajte novu banku';
+            document.getElementById('bankForm').reset();
+            document.getElementById('bankId').value = '';
+        }
+
+        // Dohvatite sve banke prilikom učitavanja stranice
+        window.onload = fetchAllBanks;
+    </script>
+
+    <!-- Uključite Bootstrap JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-oBqDVmMz4fnFO9gybpy4j6LVsQZ6h/IBr6EMQu9r8YVApk97RXxR+AMstfxr/9fT" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+
+</html>

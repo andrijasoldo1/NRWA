@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="hr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Banks CRUD App</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles */
+        #banksList {
+            margin-top: 20px;
+        }
+
+        .form-container {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1 class="my-4">Banks CRUD App</h1>
+
+        <!-- Form for adding or updating a bank -->
+        <div class="form-container">
+            <h3 id="formTitle">Add New Bank</h3>
+            <form id="bankForm">
+                <input type="hidden" id="bankId">
+                <div class="mb-3">
+                    <label for="bname" class="form-label">Bank Name</label>
+                    <input type="text" class="form-control" id="bname" required>
+                </div>
+                <div class="mb-3">
+                    <label for="city" class="form-label">City</label>
+                    <input type="text" class="form-control" id="city" required>
+                </div>
+                <div class="mb-3">
+                    <label for="ownerId" class="form-label">Owner ID</label>
+                    <input type="number" class="form-control" id="ownerId" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="button" class="btn btn-secondary" id="cancelButton" style="display: none;">Cancel</button>
+            </form>
+        </div>
+
+        <!-- List of banks -->
+        <div id="banksList">
+            <h3>List of Banks</h3>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Bank Name</th>
+                        <th>City</th>
+                        <th>Owner ID</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="banksTableBody">
+                    <!-- Banks data will be dynamically populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="app.js"></script>
+</body>
+
+</html>

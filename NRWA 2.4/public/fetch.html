@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Fetch Example</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        crossorigin="anonymous">
+</head>
+
+<body>
+    <div class="container">
+        <h1>Manage Banks</h1>
+
+        <!-- Form for adding/editing banks -->
+        <form id="bankForm" onsubmit="return submitForm(event)">
+            <input type="hidden" id="bankId">
+            <div class="mb-3">
+                <label for="bname" class="form-label">Bank Name</label>
+                <input type="text" id="bname" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="city" class="form-label">City</label>
+                <input type="text" id="city" class="form-control" required>
+            </div>
+            <div class="mb-3">
+                <label for="ownerId" class="form-label">Owner ID</label>
+                <input type="number" id="ownerId" class="form-control" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Save</button>
+            <button type="button" class="btn btn-secondary" onclick="clearForm()">Cancel</button>
+        </form>
+
+        <!-- Search bar -->
+        <div class="mb-3">
+            <label for="searchInput" class="form-label">Search Banks</label>
+            <input type="text" id="searchInput" class="form-control" onkeyup="searchBanks()">
+        </div>
+
+        <!-- Banks list -->
+        <ul id="banksList" class="list-group">
+            <!-- Banks will be listed here -->
+        </ul>
+    </div>
+
+    <!-- JavaScript for handling form submissions and bank operations -->
+    <script>
+        async function fetchBanks() {
+            try {
+                const response = await fetch('/api/banks');
+                const banks = await response.json();
+                displayBanks(banks);
+            } catch (error) {
+                console.error('Error fetching banks:', error);
+            }
+        }
+
+        function displayBanks(banks) {
+            const banksList = document.getElementById('banksList');
+            banksList.innerHTML = '';
+
+            banks.forEach(bank => {
+                const listItem = document.createElement('li');
+                listItem.className = 'list-group-item';
+
+                listItem.innerHTML = `
+                    <strong>${bank.bname}</strong> - ${bank.city}
+                    <button class="btn btn-link" onclick="editBank(${bank.id})">Edit</button>
+                    <button class="btn btn-link text-danger" onclick="deleteBank(${bank.id})">Delete</button>
+                `;
+
+                banksList.appendChild(listItem);
+            });
+        }
+
+        function clearForm() {
+            document.getElementById('bankId').value = '';
+            document.getElementById('bname').value = '';
+            document.getElementById('city').value = '';
+            document.getElementById('ownerId').value = '';
+        }
+
+        async function submitForm(event) {
+            event.preventDefault();
+
+            // Fetch form values
+            const bankId = document.getElementById('bankId').value;
+            const bname = document.getElementById('bname').value;
+            const city = document.getElementById('city').value;
+            const ownerId = parseInt(document.getElementById('ownerId').value);
+
+            const bankData = {
+                bname,
+                city,
+                owner_id: ownerId,
+            };
+
+            let response;
+            if (bankId) {
+                // Update existing bank
+                response = await fetch(`/api/banks/${bankId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(bankData),
+                });
+            } else {
+                // Create new bank
+                response = await fetch('/api/banks', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(bankData),
+                });
+            }
+
+            if (response.ok) {
+                clearForm();
+                fetchBanks(); // Refresh the list of banks
+            } else {
+                console.error('Error saving bank:', response.statusText);
+            }
+        }
+
+        async function searchBanks() {
+            const query = document.getElementById('searchInput').value.toLowerCase();
+            const response = await fetch('/api/banks');
+            const banks = await response.json();
+
+            const filteredBanks = banks.filter(bank =>
+                bank.bname.toLowerCase().includes(query)
+            );
+
+            displayBanks(filteredBanks);
+        }
+
+        async function editBank(bankId) {
+            const response = await fetch(`/api/banks/${bankId}`);
+            const bank = await response.json();
+
+            document.getElementById('bankId').value = bank.id;
+            document.getElementById('bname').value = bank.bname;
+            document.getElementById('city').value = bank.city;
+            document.getElementById('ownerId').value = bank.owner_id;
+        }
+
+        async function deleteBank(bankId) {
+            const response = await fetch(`/api/banks/${bankId}`, {
+                method: 'DELETE',
+            });
+
+            if (response.ok) {
+                fetchBanks(); // Refresh the list of banks
+            } else {
+                console.error('Error deleting bank:', response.statusText);
+            }
+        }
+
+        // Initial fetch of banks
+        fetchBanks();
+    </script>
+</body>
+
+</html>
