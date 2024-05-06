@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Member Search</title>
+    <!-- Uključite Axios -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+</head>
+
+<body>
+    <h1>Pretraživanje članova</h1>
+
+    <!-- Polje za pretraživanje i dugme -->
+    <input type="text" id="search-query" placeholder="Pretraži članove...">
+    <button id="search-button">Pretraži</button>
+
+    <!-- Div za prikaz rezultata pretraživanja -->
+    <div id="results"></div>
+
+    <!-- JavaScript kod -->
+    <script>
+        // Funkcija za pretraživanje članova
+        function searchMembers(query) {
+            axios.get('/api/members/search', {
+                params: {
+                    query: query // Upit pretraživanja
+                }
+            })
+            .then(response => {
+                // Obrađivanje rezultata pretraživanja
+                const results = response.data;
+                
+                // Prikaz rezultata pretraživanja
+                const resultsDiv = document.getElementById('results');
+                resultsDiv.innerHTML = ''; // Očisti prethodne rezultate
+
+                // Prikaz svakog člana u rezultatima pretraživanja
+                results.forEach(member => {
+                    const div = document.createElement('div');
+                    div.textContent = `ID: ${member.id}, Type: ${member.mtype}, Discount: ${member.discount}, Duration: ${member.duration}`;
+                    resultsDiv.appendChild(div);
+                });
+            })
+            .catch(error => {
+                console.error('Greška prilikom pretraživanja članova:', error);
+            });
+        }
+
+        // Dodajte događaj klik na dugme za pretraživanje
+        document.getElementById('search-button').addEventListener('click', function() {
+            const query = document.getElementById('search-query').value;
+            searchMembers(query);
+        });
+    </script>
+</body>
+
+</html>
+
+
